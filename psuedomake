@@ -1,0 +1,87 @@
+# not a real make file 
+# but does list the steps and scripts run to create the output for this paper 
+
+#########################################################################################
+# Section 1 - More intensive processing - all done on a cluster
+# If you just want to recreate figures, or see how final analysis was done Skip to section 2
+#
+##########################################################################################
+
+PROJDIR=${HOME}/proj/swi_snf_final # change this to your directory 
+# expect the following directory structure 
+DATA=${PROJDIR}/data/
+OUTPUT=${PROJDIR}/output/
+CODE=${PROJDIR}/code/
+EXTDATA=${PROJDIR}/extdata/ # this is wehre extra data should be put
+## Early processing of my raw data ## 
+## These all were done using HPC campus cluster (Rocks) - so these may need some changing to run
+## In your environment
+# -----------------------------------------------------------------------------------------
+# Processing Reads. 
+# These two take the .fastq.gz files and do alignment, filtering, mergering etc. 
+sh call.chipreadhandler.sh
+sh call.rnareadhanlder.sh
+
+# Call ChIP peaks
+sh call.macsNormal.sh
+sh call.fixPeaks.sh
+sh call.calc_enrichment_at_peaks.sh
+qsub call.fixpeaks.sh
+
+# Differntial Expression testing 
+sh call.rnaseq_diffgenes.sh
+
+# Make UCSC tracks 
+sh call.convert_to_ucsc.sh
+python swisnf_makehubs.py # I coudn't sort how to make sure the above had finished on cluster 
+                          # So I just ran this separately. 
+
+# Call my own K27ac peaks because the ENCODE file seemed to have really large domains
+qsub ${CODE}/misc/call_k27ac_peaks.sh
+
+
+#########################################################################################
+#   Section 2 - Creating Figures 
+#   This wasn't done on the cluster and I've included the intermediate files needed
+#   To generate everything in this section
+#
+##########################################################################################
+# Process external data - i.e. collect .bw from UCSC for ENCODE and coverageFrame.py 
+# ----------------------------------------------------------------------------------------
+
+# Need to get the gencode.v16.annotation.gtf file in correct spot 
+#curl -o data/external/gencode.v16.annotation.gtf.gz ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_human/release_16/gencode.v16.annotation.gtf.gz && gunzip data/external/gencode.v16.annotation.gtf.gz
+#Included this file in the data directory which I just compressed and put on our ftp site. 
+
+Rscript ${CODE}/chip_analysis/define_enhancers.R # need to clean up where these files are located
+
+# This creates the correlation matrix for each transcription factor for each arid (n_factors X n_factors)
+# Also creates a dump of the enrichments for each peak for each transcription factor (n_peaks x n_factors) 
+Rscript code/chip_analysis/pairwise_r_enrichments.R 
+
+# Processing of my data for analysis and figure making 
+# First do any pre-processing on the RNAseq and ChIP-seq data 
+Rscript code/chip_analysis/annotate_arid_peaks.R
+bash code/chip_analysis/make_bed_of_peaks.sh 
+
+
+Rscript ${CODE}/chip_analysis/pairwise_enrichments.R # for Figure 5
+# Then run scripts to generate figures
+# Run all these from the project home directory
+# ----------------------------------------------------------------------------------------
+# Generate Figures 
+Rscript code/figures/fig2_rnaseq_overview.R
+Rscript code/figures/fig3_rnaseq_avj.R
+Rscript code/figures/fig4_chipseq_ov.R
+Rscript code/figures/fig5_chipseq_multi.R
+#Rscript code/figures/fig6
+Rscript code/figures/fig7_metaplots.R
+Rscript code/figures/fig8_chip_rna_integrate.R
+Rscript code/figures/fig9_rtpcr.R 
+Rscript code/figures/fig10_id_factors.R
+
+# Few extra shell scripts to run DeepTools 
+# Heatmap images centered at peak summits were done using DeepTools 
+#https://github.com/fidelram/deepTools
+# Scripts below handle those 
+

@@ -1,0 +1,60 @@
+# Simple function to clean up names and filter out treated sample. 
+
+# pass any vector of names to it and it will fix the nameing scheme
+
+fixNames <- function(nv) { 
+  nv = gsub(pattern = 'Pol2IggrabAln.*', replacement = ' POL2_b', x = nv, perl =T)
+  nv = gsub(pattern = 'Pol2Pcr2xAln.*', replacement = 'POL2_h', x = nv, perl =T)
+  nv = gsub(pattern = 'JundIggrabAln.*', replacement = 'JUND_b', x = nv, perl =T)
+  nv = gsub(pattern = 'JundPcr1xAln.*', replacement = 'JUND_h', x = nv, perl =T)
+  nv = gsub(pattern = 'Igg.*$|Ucd.*$|Std.*$|Aln.*$', replacement = '', x=nv, perl = T)
+  nv = gsub(pattern = 'Arid3anb100279', replacement='ARID3A', nv, perl=T)
+  nv = gsub(pattern = 'Bhlhe40c', replacement='BHLHE40c', nv, perl=T)
+  nv = gsub(pattern = 'Brca1a300', replacement='BRCA1', nv, perl=T)
+  nv = gsub(pattern = 'Chd2ab68301', replacement='CHD2', nv, perl=T)
+  nv = gsub(pattern = 'Corestsc30189', replacement='COREST', nv, perl=T)
+  nv = gsub(pattern = 'Ezh239875', replacement='EZH2', nv, perl=T)
+  nv = gsub(pattern = 'Maffm8194', replacement='MAFF', nv, perl=T)
+  nv = gsub(pattern = 'Mafkab50322', replacement='MAFK_ab', nv, perl=T)
+  nv = gsub(pattern = 'Mafksc477', replacement='MAFK_sc', nv, perl=T)
+  nv = gsub(pattern = 'Mazab85725', replacement='MAZ', nv, perl=T)
+  nv = gsub(pattern = 'P300sc582', replacement='P300', nv, perl=T)
+  nv = gsub(pattern = 'Rfx5200401194', replacement='RFX', nv, perl=T)
+  nv = gsub(pattern = 'Smc3.*$', replacement = 'SMC3', nv, perl=T)
+  nv = gsub(pattern = 'Zeb1.*$', replacement = 'ZEB1', nv, perl=T) 
+  nv = gsub(pattern = 'Pcr1x', replacement = '', nv, perl=T) 
+  nv = gsub(pattern = 'Pcr2x', replacement = '', nv, perl=T) 
+  nv = gsub(pattern = 'Yy1.*$', replacement = 'YY1', nv, perl=T) 
+  nv = gsub(pattern = 'Atf3.*$', replacement = 'ATF3', nv, perl=T) 
+  nv = gsub(pattern = 'Bhlhe40V.*$', replacement = 'Bhlhe40_v', nv, perl=T)
+  nv = gsub(pattern = 'Cebpd.*$', replacement = 'CEBPD', nv, perl=T) 
+  nv = gsub(pattern = 'Creb1.*$', replacement = 'CREB1', nv, perl = T) 
+  nv = gsub(pattern = 'Ctcfsc5916V.*$', replacement = 'CTCF_h', nv, perl = T) 
+  nv = gsub(pattern = 'Elf1.*$', replacement = 'ELF1', nv, perl=T) 
+  nv = gsub(pattern = 'Fosl2.*$', replacement = 'FOSL2', nv, perl = T) 
+  nv = gsub(pattern = 'Foxa1sc101.*$', replacement ='FOXA1_sc1', nv, perl = T) 
+  nv = gsub(pattern = 'Foxa1sc655.*$', replacement = 'FOXA1_sc2', nv, perl = T) 
+  nv = gsub(pattern = 'Hdac2.*$', replacement = 'HDAC2', nv, perl =T) 
+  nv = gsub(pattern = 'Hey1.*$', replacement = 'HEY1', nv, perl=T) 
+  nv = gsub(pattern = 'Hnf4a.*$', replacement = 'HNF4A', nv, perl = T) 
+  nv = gsub(pattern = 'Hnf4g.*$', replacement = 'HNF4G', nv, perl = T) 
+  nv = gsub(pattern = 'MaxV.*$', replacement = 'MAX_h', nv, perl = T) 
+  nv = gsub(pattern = 'Mbd4.*$', replacement = 'MBD4', nv, perl=T) 
+  nv = gsub(pattern = 'Mybl2.*$', replacement = 'MYBL2', nv, perl = T) 
+  nv = gsub(pattern = 'Nfic.*$', replacement = 'NFIC', nv, perl = T) 
+  nv = gsub(pattern = 'Nr2f2.*$', replacement = 'NR2F2', nv, perl = T) 
+  nv = gsub(pattern = 'NrsfV.*$', replacement = 'NRSF', nv, perl = T) 
+  nv = gsub(pattern = 'P300V.*$', replacement = 'P300_h', nv, perl = T) 
+  nv = gsub(pattern = 'Rad21V.*$', replacement = 'RAD21_h', nv, perl = T) 
+  nv = gsub(pattern = 'Sin3a.*$', replacement = 'SIN3A', nv, perl = T) 
+  nv = gsub(pattern = 'Sp2.*$', replacement = 'SP2', nv, perl = T) 
+  nv = gsub(pattern = 'Srf.*$', replacement = 'SRF1', nv, perl = T) 
+  nv = gsub(pattern = 'Tead4.*$', replacement = 'TEAD4', nv, perl =T) 
+return(nv) 
+}
+
+# Simply keeps the list of things that can be dropped, eithe rdrop them with a 
+# [ operator or use filter in dplyr
+filterNames <- c('Pol2Forskln', 'Srebp1Insln', 'Pgc1aForskln', 'MAFK_sc', 'Hsf1Forskln', 'Grp20Forskln', 'ErraForskln', 'Rxlch', 'RxlchV0416101', 'RxlchV0422111', 'BHLHE40_h', 'NRSF') 
+
+
