@@ -75,17 +75,19 @@ make_bxplot <- function(dfr, retPlot =TRUE, notch=F) {
   }
   else{  
     plt <- pltdf %>% 
-      ggplot(aes(x=group, y = signal, color = group) ) + 
-      geom_boxplot(notch = notch, width = 0.9) +
+      ggplot(aes(x=group, y = signal, fill = group) ) + 
+      geom_boxplot(notch = notch, width = 0.9, color = 'grey30') +
       facet_wrap(~peak) + 
       theme_paper() + 
       scale_color_manual(values = c('grey20', 'red2') ) + 
       theme(panel.grid.minor = element_blank(), 
             panel.background = element_rect(fill = NA, color = 'grey30'), 
+            strip.text = element_text(color = 'grey10', size =20),
             legend.position = 'none', 
-            axis.text = element_text(color = 'grey30'), 
+            axis.text.x = element_blank(), 
             axis.ticks = element_blank() ) + 
-      xlab('') + ylab('Median Relative Enrichment') 
+      xlab('') + ylab('Median Relative Enrichment') + 
+      scale_fill_manual(values = c('grey30', 'red2'))
     
     return(plt)
   }
@@ -122,13 +124,13 @@ df_for_mp_1b_2 <- function(end, pname_list) {
   arid1b_fn <- paste('output/encode_coverages/coverages/arid1b_p_', end, sep ='') 
   arid2_fn  <- paste('output/encode_coverages/coverages/arid2_p_', end, sep = '') 
   act_1b_vals <- filter_arid_coverage(arid1b_fn, arid1b_act) %>% 
-    mutate(group = 'Active', peak = 'ARID1B Peaks')
+    mutate(group = 'Active', peak = 'ARID1B')
   rep_1b_vals <- filter_arid_coverage(arid1b_fn, arid1b_rep) %>%
-    mutate(group = 'Repressed', peak = 'ARID1B Peaks') 
+    mutate(group = 'Repressed', peak = 'ARID1B') 
   act_2_vals  <- filter_arid_coverage(arid2_fn, arid2_act)  %>%
-    mutate(group = 'Active', peak = 'ARID2 Peaks') 
+    mutate(group = 'Active', peak = 'ARID2') 
   rep_2_vals <- filter_arid_coverage(arid2_fn, arid2_rep) %>%
-    mutate(group = 'Repressed', peak = 'ARID2 Peaks') 
+    mutate(group = 'Repressed', peak = 'ARID2') 
   all <- rbind(act_1b_vals, rep_1b_vals, act_2_vals, rep_2_vals) 
   all <- all %>% left_join(peak_lookup, by = c('rowname' = 'name')  )
   all %<>% gather('Pos', 'Value', -group, -rowname, -peak, -type) %>% tbl_df() %>%
@@ -149,16 +151,16 @@ df_for_mp_1a_2 <- function(end, pname_list) {
   arid1a_fn <- paste('output/encode_coverages/coverages/arid1a_p_', end, sep ='') 
   arid2_fn  <- paste('output/encode_coverages/coverages/arid2_p_', end, sep = '') 
   coop_1a_vals <- filter_arid_coverage(arid1a_fn, arid1a_coop) %>% 
-    mutate(group = 'Cooperative', peak = 'ARID1A Peaks')
+    mutate(group = 'Cooperative', peak = 'ARID1A')
   print(nrow(coop_1a_vals) )
   comp_1a_vals <- filter_arid_coverage(arid1a_fn, arid1a_comp) %>%
-    mutate(group = 'Competitive', peak = 'ARID1A Peaks') 
+    mutate(group = 'Competitive', peak = 'ARID1A') 
   print(nrow(comp_1a_vals) )
   coop_2_vals  <- filter_arid_coverage(arid2_fn, arid2_coop)  %>%
-    mutate(group = 'Cooperative', peak = 'ARID2 Peaks') 
+    mutate(group = 'Cooperative', peak = 'ARID2') 
   print(nrow(coop_2_vals) )
   comp_2_vals <- filter_arid_coverage(arid2_fn, arid2_comp) %>%
-    mutate(group = 'Competitive', peak = 'ARID2 Peaks') 
+    mutate(group = 'Competitive', peak = 'ARID2') 
   print(nrow(comp_2_vals) )
   all <- rbind(coop_1a_vals, comp_1a_vals, coop_2_vals, comp_2_vals)
   print(dim(all) ) 
