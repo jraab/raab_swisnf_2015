@@ -1,6 +1,8 @@
 # README
 
-This repository contains the code used in the manuscript, **Genome-Wide Transcriptional Regulation Mediated by Biochemically Distinct Forms of SWI/SNF**, currently submitted.
+This repository contains the code used in the manuscript, [**Genome-Wide Transcriptional Regulation Mediated by Biochemically Distinct Forms of SWI/SNF**](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005748). 
+
+If you are just interested in lookin at the ChIP-seq tracks - they are available as a TrackHub on the UCSC browswer [here](http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hubUrl=http://trackhubs.its.unc.edu/magnuslb/jraab/swi_snf/hub.txt)
 
 Most of the computationally time-consuming analysis was done using a Rocks cluster, so the scripts associated this are not very portable and have many hard-coded links to data and scripts.
 
@@ -16,7 +18,6 @@ If you want even  more raw data (fastq files) see the GEO submission (GSE69568).
 Then to create the figures run: 
 
     sh createFigs.sh
-
 
 A more commented version of those scripts is found in pseudomake - which also includes the pre-preprocessing steps. It is not intended to be run directly. 
 
